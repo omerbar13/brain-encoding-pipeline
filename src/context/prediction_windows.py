@@ -4,6 +4,10 @@ from src.context.tr_grouping import (
     find_last_words_per_tr
 )
 from src.context.future_windows import create_future_windows
+from src.context.window_embeddings import (
+    build_future_embedding_matrix
+)
+import numpy as np
 
 def create_word_prediction_window(feature_data, word_embeddings, run_length, run_durations, run_index,
                                  window_sizes={'short': 3, 'medium': 6, 'long': 9}, max_gap_seconds=2.0):
@@ -163,50 +167,23 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
     for size_name, max_window_size in window_sizes.items():
         print(f"\nProcessing embeddings for {size_name} windows...")
 
-        # Size-specific window dimensions
-        future_window_size = max_window_size * embedding_dim
-        final_future_embeddings = np.zeros((run_length, future_window_size))
-        valid_mask = np.zeros(run_length, dtype=bool)
-
-        # 11.1 For each TR with a last word, retrieve and process future embeddings
-        for tr_idx, (current_onset, _, _) in last_words_by_tr.items():
-            # 11.2 Skip if this word doesn't have a future window for this size
-            if current_onset not in word_future_pairs[size_name]:
-                continue
-
-            # 11.3 Skip if TR is out of bounds
-            if tr_idx >= run_length:
-                continue
-
-            # 11.4 Get future embeddings for this window
-            future_onsets = word_future_pairs[size_name][current_onset]
-            future_embeddings_list = []
-
-            for onset in future_onsets:
-                if onset in word_embeddings:
-                    future_embeddings_list.append(word_embeddings[onset])
-                else:
-                    future_embeddings_list.append(np.zeros(embedding_dim))
-
-            # 11.5 Pad/truncate as needed
-            while len(future_embeddings_list) < max_window_size:
-                future_embeddings_list.append(np.zeros(embedding_dim))
-            future_embeddings_list = future_embeddings_list[:max_window_size]
-
-            # 11.6 Stack and flatten while preserving information
-            stacked = np.stack(future_embeddings_list)
-            flattened = stacked.flatten()
-
-            # 11.7 Store in final output
-            final_future_embeddings[tr_idx] = flattened
-            valid_mask[tr_idx] = True
+        final_future_embeddings, valid_mask = (
+            build_future_embedding_matrix(
+                last_words_by_tr=last_words_by_tr,
+                word_future_pairs=word_future_pairs[size_name],
+                word_embeddings=word_embeddings,
+                run_length=run_length,
+                max_window_size=max_window_size,
+                embedding_dim=embedding_dim
+            )
+        )       
 
         # Log information about this window size
         trs_with_windows = np.sum(valid_mask)
         print(f"{size_name.capitalize()} windows summary:")
         print(f"  TRs with valid windows: {trs_with_windows} out of {run_length}")
         print(f"  Coverage: {trs_with_windows / run_length * 100:.1f}% of TRs")
-        print(f"  Embedding dimensionality: {future_window_size}")
+        print(f"  Embedding dimensionality: {final_future_embeddings.shape[1]}")
 
         # Store results for this window size
         results[size_name] = (final_future_embeddings, valid_mask)
