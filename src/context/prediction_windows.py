@@ -1,5 +1,8 @@
 from src.context.run_words import get_run_words
-
+from src.context.tr_grouping import (
+    group_words_by_tr,
+    find_last_words_per_tr
+)
 def create_word_prediction_window(feature_data, word_embeddings, run_length, run_durations, run_index,
                                  window_sizes={'short': 3, 'medium': 6, 'long': 9}, max_gap_seconds=2.0):
     """
@@ -44,23 +47,17 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
     print(f"Words with embeddings: {n_words_with_embeddings}/{len(run_words)} "
           f"({n_words_with_embeddings / len(run_words) * 100:.1f}%)")
 
-    # 3. Maps each word within run_words to its TR
-    word_to_tr = {onset: int((onset - run_start_time) / tr_duration)
-                  for onset, _, _ in run_words}
+    words_by_tr = group_words_by_tr(
+        run_words,
+        run_start_time,
+        tr_duration
+    )
 
-    # 4. Group words by TR
-    words_by_tr = {}
-    for onset, word, duration in run_words:
-        tr_idx = word_to_tr[onset]
-        if tr_idx not in words_by_tr:
-            words_by_tr[tr_idx] = []
-        words_by_tr[tr_idx].append((onset, word, duration))
+    last_words_by_tr = find_last_words_per_tr(
+        words_by_tr
+    )
 
-    # 5. Find the last word in each TR (highest onset time)
-    last_words_by_tr = {}
-    for tr_idx, words in words_by_tr.items():
-        last_word = max(words, key=lambda x: x[0])
-        last_words_by_tr[tr_idx] = last_word
+
 
     print(f"Found {len(last_words_by_tr)} TRs with words")
     print(f"Using only the last word in each TR for future window creation")
