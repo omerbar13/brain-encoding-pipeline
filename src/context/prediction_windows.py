@@ -3,6 +3,8 @@ from src.context.tr_grouping import (
     group_words_by_tr,
     find_last_words_per_tr
 )
+from src.context.future_windows import create_future_windows
+
 def create_word_prediction_window(feature_data, word_embeddings, run_length, run_durations, run_index,
                                  window_sizes={'short': 3, 'medium': 6, 'long': 9}, max_gap_seconds=2.0):
     """
@@ -88,49 +90,39 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
             print(f"  TR {tr_idx}: Selected '{last_word}' at {last_onset:.2f}s | "
                   f"Max onset is {max_onset:.2f}s | Correct: {is_correct}")
 
+
+
+    ## new
     # 6. Initialize dictionaries for each window size
-    word_future_pairs = {size_name: {} for size_name in window_sizes}
+    word_future_pairs = {}
 
-    # 7. Sort the list again to ensure chronological order
-    sorted_run_words = sorted(run_words, key=lambda x: x[0])
+    # 7. Ensure chronological ordering
+    sorted_run_words = sorted(
+        run_words,
+        key=lambda x: x[0]
+    )
 
-    # 8. MAIN PART: WINDOW CREATION - For each window size, create future windows
+    # 8. Create future windows
     for size_name, max_window_size in window_sizes.items():
-        print(f"\nCreating {size_name} windows (size: {max_window_size} words)...")
+        
+        print(
+            f"\nCreating {size_name} windows "
+            f"(size: {max_window_size} words)..."
+        )
 
-        # For each last word in a TR, create a future window of this size
-        for tr_idx, (current_onset, current_word, current_duration) in last_words_by_tr.items():
-            # 8.1 Find position of current word in sorted list
-            current_idx = next((i for i, (onset, _, _) in enumerate(sorted_run_words)
-                               if onset == current_onset), -1)
+        word_future_pairs[size_name] = create_future_windows(
+            sorted_run_words=sorted_run_words,
+            last_words_by_tr=last_words_by_tr,
+            max_window_size=max_window_size,
+            max_gap_seconds=max_gap_seconds
+        )
 
-            if current_idx == -1 or current_idx >= len(sorted_run_words) - 1:
-                continue  # Skip if we can't find word or it's the last word
+        print(
+            f"Created "
+            f"{len(word_future_pairs[size_name])} "
+            f"{size_name} windows"
+        )
 
-            # 8.2 Initialize list and end of words to measure the 2 seconds exclusion rule
-            future_onsets = []
-            current_end = current_onset + current_duration
-
-            # 8.3 Enact inclusionary criteria
-            j = current_idx + 1  # Start from the next word after our current one
-            while len(future_onsets) < max_window_size and j < len(sorted_run_words):
-                next_onset, _, next_duration = sorted_run_words[j]
-                time_gap = next_onset - current_end
-
-                # Break if gap is too large and we have at least 2 words
-                if time_gap > max_gap_seconds and len(future_onsets) >= 2:
-                    break
-
-                future_onsets.append(next_onset)
-                current_end = next_onset + next_duration
-                j += 1
-
-            # 8.4 Only keep windows with at least 2 future words
-            if len(future_onsets) >= 2:
-                word_future_pairs[size_name][current_onset] = future_onsets
-
-        # Log results for this window size
-        print(f"Created {len(word_future_pairs[size_name])} {size_name} windows")
 
     # LOGGING6 Print sample future windows for each size
     print("\nSample future windows for each size:")
