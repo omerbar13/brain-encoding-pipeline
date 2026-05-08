@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def align_embeddings_to_tr(
     word_embeddings,
     run_start_time,

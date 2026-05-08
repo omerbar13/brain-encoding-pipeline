@@ -9,6 +9,20 @@ from src.context.window_embeddings import (
 )
 import numpy as np
 
+def create_current_embeddings(last_words_by_tr, word_embeddings, run_length):
+    embedding_dim = next(iter(word_embeddings.values())).shape[0]
+
+    current_embeddings = np.zeros((run_length, embedding_dim))
+    valid_mask = np.zeros(run_length, dtype=bool)
+
+    for tr_idx, (onset, _, _) in last_words_by_tr.items():
+
+        if onset in word_embeddings and tr_idx < run_length:
+            current_embeddings[tr_idx] = word_embeddings[onset]
+            valid_mask[tr_idx] = True
+
+    return current_embeddings, valid_mask
+
 def create_word_prediction_window(feature_data, word_embeddings, run_length, run_durations, run_index,
                                  window_sizes={'short': 3, 'medium': 6, 'long': 9}, max_gap_seconds=2.0):
     """
@@ -62,8 +76,6 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
     last_words_by_tr = find_last_words_per_tr(
         words_by_tr
     )
-
-
 
     print(f"Found {len(last_words_by_tr)} TRs with words")
     print(f"Using only the last word in each TR for future window creation")
@@ -186,6 +198,19 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
         print(f"  Embedding dimensionality: {final_future_embeddings.shape[1]}")
 
         # Store results for this window size
-        results[size_name] = (final_future_embeddings, valid_mask)
+        results[size_name] = {
+            "future_embeddings": final_future_embeddings,
+            "future_mask": valid_mask
+        }
 
-    return results
+    current_embeddings, current_mask = create_current_embeddings(
+        last_words_by_tr,
+        word_embeddings,
+        run_length
+    )
+
+    return {
+        "current_embeddings": current_embeddings,
+        "current_mask": current_mask,
+        "future": results
+    }
