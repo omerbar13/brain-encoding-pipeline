@@ -216,3 +216,31 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project data and research outputs
+data/
+results/*
+!results/.gitkeep
+outputs/
+logs/
+
+# Neuroimaging and dataset files
+*.nii
+*.nii.gz
+*.mat
+
+# Large intermediate arrays
+*.npy
+*.npz
+
+# Local tabular data / annotations
+*.csv
+*.tsv
+
+# Model checkpoints and serialized objects
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.pkl
+*.joblib
