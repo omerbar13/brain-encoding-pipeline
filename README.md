@@ -1,62 +1,167 @@
-# Neural Encoding Pipeline: EEG/fMRI + NLP Transformer Alignment
+# Smart Focus Tracker
 
-A modular machine learning pipeline for aligning transformer-based language representations with fMRI brain activity to study neural encoding of speech and language processing.
+Smart Focus Tracker is a full-stack task and focus-session tracking application built with Node.js, Express, and MongoDB.
 
+The project demonstrates a clean backend architecture using RESTful API design, separation of concerns, persistent database storage, and scalable project structure.
 
-## Key Features
+## Project Overview
 
-- Transformer-based NLP embeddings for language representation
-- fMRI-based neural encoding using ROI-level brain parcellation (Schaefer atlas)
-- Cross-validated regression models (Ridge, PCA-based pipelines)
-- Temporal analysis using multiple window sizes
-- Reproducible experimental pipeline with modular architecture
-
+The application provides a backend API for managing tasks and focus-related productivity data. It was built as a practical full-stack development project to demonstrate backend design, API development, database integration, and maintainable application structure.
 
 ## Tech Stack
 
-- Python
-- PyTorch / Transformers
-- scikit-learn
-- Nilearn (fMRI analysis)
-- NumPy, Pandas
-- Matplotlib
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- JavaScript
+- dotenv
 
+## Features
 
-## Pipeline Overview
+- Create tasks
+- Retrieve all tasks
+- Update existing tasks
+- Delete tasks
+- Store data persistently using MongoDB
+- Structured backend architecture with routes, controllers, services, and models
 
-1. fMRI data loading and preprocessing (StudyForrest dataset)
-2. Brain parcellation using Schaefer atlas (400 ROIs)
-3. Text processing using transformer-based language models
-4. Alignment of linguistic embeddings with neural signals
-5. Encoding model training (Ridge regression + cross-validation)
-6. Evaluation across brain regions and time windows
+## Project Structure
 
+```text
+backend/
+├── src/
+│   ├── controllers/      # Handles HTTP request logic
+│   ├── services/         # Business logic and database operations
+│   ├── models/           # Mongoose schemas
+│   ├── routes/           # API route definitions
+│   └── app.js            # Application entry point
+├── package.json
+├── package-lock.json
+└── .env                  # Local environment variables, not committed
+```
 
-## Repository Structure
+## Setup Instructions
 
-src/               Core pipeline modules  
-notebooks/         Experimental notebooks  
-configs/           Experiment configurations  
-scripts/           Execution scripts  
-results/           Outputs and figures  
+### 1. Clone the repository
 
+```bash
+git clone https://github.com/your-username/smart-focus-tracker.git
+cd smart-focus-tracker/backend
+```
 
-## Data
+### 2. Install dependencies
 
-This project uses the StudyForrest fMRI dataset.  
-Due to data usage restrictions, raw neuroimaging data is not included in this repository.
+```bash
+npm install
+```
 
-Instructions for dataset access and preprocessing are provided in the documentation.
+### 3. Configure environment variables
 
+Create a `.env` file inside the `backend/` folder:
 
-## Author Contribution
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/taskdb
+```
 
-This project was developed as part of a collaborative research internship at the Donders Institute for Brain, Cognition and Behaviour.
+### 4. Start the server
 
-Core contributions include:
-- Machine learning pipeline design and implementation
-- NLP-fMRI alignment modeling
-- Encoding model development and evaluation workflows
+```bash
+node src/app.js
+```
 
+The server runs locally at:
 
+```text
+http://localhost:5000
+```
 
+## API Endpoints
+
+### Get all tasks
+
+```http
+GET /tasks
+```
+
+Example response:
+
+```json
+[
+  {
+    "_id": "661f123abc...",
+    "title": "Study backend architecture",
+    "createdAt": "2026-04-30T10:00:00.000Z",
+    "updatedAt": "2026-04-30T10:00:00.000Z"
+  }
+]
+```
+
+### Create a task
+
+```http
+POST /tasks
+```
+
+Request body:
+
+```json
+{
+  "title": "Study backend architecture"
+}
+```
+
+Example error response:
+
+```json
+{
+  "error": "Title is required"
+}
+```
+
+### Update a task
+
+```http
+PUT /tasks/:id
+```
+
+Request body:
+
+```json
+{
+  "title": "Updated task title"
+}
+```
+
+### Delete a task
+
+```http
+DELETE /tasks/:id
+```
+
+## Architecture
+
+The backend follows a layered structure:
+
+```text
+Routes → Controllers → Services → Models
+```
+
+This structure separates API routing, request handling, business logic, and database interaction. The goal is to keep the codebase easier to maintain, test, and extend.
+
+## Current Status
+
+The current version implements the backend API and MongoDB persistence layer. Future development could include authentication, user accounts, task categories, a React frontend dashboard, and deployment.
+
+## Future Improvements
+
+- User authentication with JWT
+- User accounts and protected routes
+- Task categories or tags
+- Focus-session analytics
+- Frontend dashboard
+- Deployment to a cloud platform
+
+## Author
+
+Omer Bar
