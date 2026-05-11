@@ -1,166 +1,123 @@
-# Smart Focus Tracker
+# Brain Encoding Pipeline
 
-Smart Focus Tracker is a full-stack task and focus-session tracking application built with Node.js, Express, and MongoDB.
+A modular research codebase for aligning transformer-based language representations with fMRI data in a brain encoding pipeline.
 
-The project demonstrates a clean backend architecture using RESTful API design, separation of concerns, persistent database storage, and scalable project structure.
+This project refactors an exploratory research notebook into reusable Python modules for data loading, language embedding generation, temporal alignment, context-window construction, and pipeline orchestration.
 
 ## Project Overview
 
-The application provides a backend API for managing tasks and focus-related productivity data. It was built as a practical full-stack development project to demonstrate backend design, API development, database integration, and maintainable application structure.
+The pipeline combines natural language processing and neuroimaging analysis to study how language representations relate to brain activity during movie-watching and speech comprehension.
 
-## Tech Stack
+Core components include:
 
-- Node.js
-- Express.js
-- MongoDB Atlas
-- Mongoose
-- JavaScript
-- dotenv
+- GPT-2 based contextual word embeddings
+- Temporal alignment of word embeddings to fMRI TRs
+- Current-word and future-context representation construction
+- Multi-window context modeling (`short`, `medium`, `long`)
+- Modular structure for future voxel-wise encoding analysis
 
-## Features
-
-- Create tasks
-- Retrieve all tasks
-- Update existing tasks
-- Delete tasks
-- Store data persistently using MongoDB
-- Structured backend architecture with routes, controllers, services, and models
-
-## Project Structure
+## Repository Structure
 
 ```text
-backend/
-├── src/
-│   ├── controllers/      # Handles HTTP request logic
-│   ├── services/         # Business logic and database operations
-│   ├── models/           # Mongoose schemas
-│   ├── routes/           # API route definitions
-│   └── app.js            # Application entry point
-├── package.json
-├── package-lock.json
-└── .env                  # Local environment variables, not committed
+src/
+├── alignment/      # Align word embeddings to fMRI TRs
+├── context/        # Build current/future linguistic context windows
+├── data/           # Load fMRI runs and run-duration metadata
+├── features/       # Generate transformer-based word embeddings
+├── pipeline/       # Lightweight pipeline entrypoint and configuration
+├── models/         # Reserved for voxel-wise encoding models
+├── evaluation/     # Reserved for reports and evaluation utilities
+└── brain/          # Reserved for brain-map and ROI utilities
 ```
 
-## Setup Instructions
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/smart-focus-tracker.git
-cd smart-focus-tracker/backend
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Configure environment variables
-
-Create a `.env` file inside the `backend/` folder:
-
-```env
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/taskdb
-```
-
-### 4. Start the server
-
-```bash
-node src/app.js
-```
-
-The server runs locally at:
+Additional folders:
 
 ```text
-http://localhost:5000
+configs/            # Experiment configuration files
+notebooks/          # Exploratory notebooks
+results/            # Local output files and generated results
+scripts/            # Utility scripts
 ```
 
-## API Endpoints
+## Data
 
-### Get all tasks
+Raw neuroimaging data is not included in this repository.
 
-```http
-GET /tasks
-```
+The original experiments used fMRI data and annotation files that are subject to dataset and institutional usage restrictions. Users should obtain the relevant data through the appropriate official channels and configure paths locally.
 
-Example response:
+Expected local inputs include:
 
-```json
-[
-  {
-    "_id": "661f123abc...",
-    "title": "Study backend architecture",
-    "createdAt": "2026-04-30T10:00:00.000Z",
-    "updatedAt": "2026-04-30T10:00:00.000Z"
-  }
-]
-```
-
-### Create a task
-
-```http
-POST /tasks
-```
-
-Request body:
-
-```json
-{
-  "title": "Study backend architecture"
-}
-```
-
-Example error response:
-
-```json
-{
-  "error": "Title is required"
-}
-```
-
-### Update a task
-
-```http
-PUT /tasks/:id
-```
-
-Request body:
-
-```json
-{
-  "title": "Updated task title"
-}
-```
-
-### Delete a task
-
-```http
-DELETE /tasks/:id
-```
-
-## Architecture
-
-The backend follows a layered structure:
-
-```text
-Routes → Controllers → Services → Models
-```
-
-This structure separates API routing, request handling, business logic, and database interaction. The goal is to keep the codebase easier to maintain, test, and extend.
+- Hyperaligned fMRI run files (`.nii`)
+- Speech annotation file (`.tsv`)
+- Brain mask and atlas files where applicable
 
 ## Current Status
 
-The current version implements the backend API and MongoDB persistence layer. Future development could include authentication, user accounts, task categories, a React frontend dashboard, and deployment.
+This repository is a cleaned modular refactor of a research pipeline originally developed in notebook form.
 
-## Future Improvements
+The `src/` modules contain reusable components for the main pipeline stages, while the full end-to-end experimental workflow can be extended from the provided pipeline scaffold.
 
-- User authentication with JWT
-- User accounts and protected routes
-- Task categories or tags
-- Focus-session analytics
-- Frontend dashboard
-- Deployment to a cloud platform
+The current focus of this repository is code organization, modularity, and reproducibility rather than redistribution of restricted data or notebook-specific intermediate outputs.
+
+## Main Components
+
+### Data Loading
+
+`src/data/`
+
+Contains utilities for loading fMRI runs and run-duration information.
+
+### Embedding Generation
+
+`src/features/`
+
+Contains GPT-2 based contextual word embedding generation.
+
+### Temporal Alignment
+
+`src/alignment/`
+
+Contains functions for aligning word-level embeddings to fMRI TRs and averaging embeddings per TR.
+
+### Context Windows
+
+`src/context/`
+
+Contains logic for constructing future word prediction windows and converting them into TR-aligned embedding matrices.
+
+### Pipeline Entry Point
+
+`src/pipeline/run_pipeline.py`
+
+Provides a lightweight entrypoint showing how the modular components connect.
+
+## Installation
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+The current pipeline scaffold can be run from the project root with:
+
+```bash
+python -m src.pipeline.run_pipeline
+```
+
+Before running full experiments, update local paths in:
+
+```text
+src/pipeline/config.py
+```
+
+## Notes
+
+This project is intended as a research-code refactor and portfolio demonstration. It shows how an exploratory neuroimaging and NLP research notebook can be reorganized into a clearer modular Python project.
+
+The repository does not include raw fMRI data, subject-level data, or restricted experimental files.
 
 ## Author
 
