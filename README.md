@@ -115,7 +115,9 @@ src/pipeline/config.py
 
 ## Notes
 
-This project is intended as a research-code refactor and portfolio demonstration. It shows how an exploratory neuroimaging and NLP research notebook can be reorganized into a clearer modular Python project.
+This repository contains research code intended to illustrate the structure, methodology, and implementation of the brain encoding project.
+
+The code is provided as a portfolio and research demonstration. It is not a standalone distribution of the full experimental dataset or institutional research environment.
 
 The repository does not include raw fMRI data, subject-level data, or restricted experimental files.
 
