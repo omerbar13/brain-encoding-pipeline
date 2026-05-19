@@ -198,10 +198,7 @@ def create_word_prediction_window(feature_data, word_embeddings, run_length, run
         print(f"  Embedding dimensionality: {final_future_embeddings.shape[1]}")
 
         # Store results for this window size
-        results[size_name] = {
-            "future_embeddings": final_future_embeddings,
-            "future_mask": valid_mask
-        }
+        results[size_name] = (final_future_embeddings, valid_mask)
 
     current_embeddings, current_mask = create_current_embeddings(
         last_words_by_tr,
