@@ -1,0 +1,26 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brain-encoding-pipeline"
+version = "0.1.0"
+description = "Voxel-wise brain encoding pipeline using GPT-2 contextual embeddings and Ridge regression"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "matplotlib",
+    "torch",
+    "transformers",
+    "nilearn",
+    "nibabel",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
