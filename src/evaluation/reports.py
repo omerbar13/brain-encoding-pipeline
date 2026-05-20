@@ -18,7 +18,7 @@ def analyze_timing_effects(
     Fit a linear trend to the voxel-wise prediction gains.
 
     Note: in the notebook this function was named analyze_timing_effects
-    but does not actually use feature_data's timing — it regresses gain
+    but does not actually use feature_data's timing â€” it regresses gain
     values against their own ordinal index. It is preserved faithfully here.
 
     Parameters
@@ -26,7 +26,7 @@ def analyze_timing_effects(
     voxel_scores : np.ndarray, shape (n_voxels, 6)
         Output of process_voxels().
     feature_data : dict
-        Annotation dict (onset → word metadata). Accepted for signature
+        Annotation dict (onset â†’ word metadata). Accepted for signature
         compatibility; not used in the regression.
 
     Returns
@@ -91,7 +91,7 @@ def create_summary_report(
     valid_scores = voxel_scores[~np.isnan(voxel_scores).any(axis=1)]
 
     if len(valid_scores) == 0:
-        logger.warning("No valid scores found — summary report not written.")
+        logger.warning("No valid scores found â€” summary report not written.")
         return
 
     # Unpack score columns
@@ -118,16 +118,16 @@ def create_summary_report(
 
         f.write("1. Initial Score Statistics (Current Word Only):\n")
         f.write(f"   Mean Correlation: {np.mean(initial_correlations):.4f}\n")
-        f.write(f"   Mean R²: {np.mean(initial_r2):.4f}\n")
+        f.write(f"   Mean RÂ²: {np.mean(initial_r2):.4f}\n")
         f.write(f"   Std Correlation: {np.std(initial_correlations):.4f}\n")
         f.write(f"   Regression slope: {init_slope:.4f}\n")
-        f.write(f"   Regression R²: {init_r ** 2:.4f}\n\n")
+        f.write(f"   Regression RÂ²: {init_r ** 2:.4f}\n\n")
 
         f.write("2. Final Score Statistics (With Prediction Window):\n")
         f.write(f"   Mean Correlation: {np.mean(final_correlations):.4f}\n")
         f.write(f"   Std Correlation: {np.std(final_correlations):.4f}\n")
         f.write(f"   Regression slope: {final_slope:.4f}\n")
-        f.write(f"   Regression R²: {final_r ** 2:.4f}\n\n")
+        f.write(f"   Regression RÂ²: {final_r ** 2:.4f}\n\n")
 
         f.write("3. Improvement Analysis:\n")
         f.write(f"   Mean Correlation Gain: {np.mean(correlation_gains):.4f}\n")

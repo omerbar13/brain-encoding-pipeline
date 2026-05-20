@@ -27,7 +27,7 @@ def load_atlas(n_rois: int = 400, yeo_networks: int = 17, resolution_mm: int = 2
     Returns
     -------
     atlas_img : Nifti1Image
-        The parcellation image — each voxel value is a parcel index.
+        The parcellation image â€” each voxel value is a parcel index.
     labels : list of str
         Parcel label names corresponding to each index.
     """
@@ -52,7 +52,7 @@ def build_roi_mask(run_img, atlas_img, roi_indices: list[int]) -> np.ndarray:
     Build a boolean 3-D voxel mask for a set of ROI parcel indices.
 
     The atlas is resampled to the voxel space of run_img using nearest-
-    neighbour interpolation (required for a parcellation — linear
+    neighbour interpolation (required for a parcellation â€” linear
     interpolation would create meaningless fractional parcel values).
 
     Parameters

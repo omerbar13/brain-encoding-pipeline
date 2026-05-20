@@ -27,7 +27,7 @@ def create_timing_visualization(
     output_dir : str
         Directory where timing_analysis.png is saved.
     feature_data : dict
-        Annotation dict from process_annotations(): onset → word metadata.
+        Annotation dict from process_annotations(): onset â†’ word metadata.
     voxel_scores : np.ndarray, shape (n_voxels, 6)
         Output of process_voxels(). Column 5 is prediction gain.
     time_threshold : float
@@ -80,7 +80,7 @@ def create_timing_visualization(
     logger.info("Valid data points for timing plot: %d", len(intervals))
 
     if len(intervals) == 0:
-        logger.warning("All timing data points were NaN — nothing to plot.")
+        logger.warning("All timing data points were NaN â€” nothing to plot.")
         return np.array([])
 
     # --- Plot ---
@@ -97,7 +97,7 @@ def create_timing_visualization(
     ax.set_ylabel('Correlation Gain')
     ax.set_title(
         f'Relationship between Word Timing and Prediction Gains\n'
-        f'(Intervals ≤ {time_threshold}s)'
+        f'(Intervals â‰¤ {time_threshold}s)'
     )
     ax.set_xlim(-0.1, time_threshold + 0.1)
     ax.grid(True, alpha=0.3)

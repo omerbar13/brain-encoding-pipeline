@@ -46,8 +46,8 @@ def compute_correlation(model, features: np.ndarray, targets: np.ndarray) -> flo
     """
     Predict with a fitted model and return the Pearson correlation with targets.
 
-    Guards against constant predictions or constant targets — both produce
-    undefined correlations — by returning 0.0 in those cases.
+    Guards against constant predictions or constant targets â€” both produce
+    undefined correlations â€” by returning 0.0 in those cases.
 
     Parameters
     ----------
@@ -80,11 +80,11 @@ def _compute_run_start_time(internal_run_index: int, run_durations: list) -> flo
 
     internal_run_index is 0-based over the runs that were actually loaded
     (i.e. run 4 is never in this list). The mapping to actual run numbers is:
-        internal index 0 → run 1
-        internal index 1 → run 2
-        internal index 2 → run 3
-        internal index 3 → run 5  (run 4 skipped)
-        internal index 4 → run 6
+        internal index 0 â†’ run 1
+        internal index 1 â†’ run 2
+        internal index 2 â†’ run 3
+        internal index 3 â†’ run 5  (run 4 skipped)
+        internal index 4 â†’ run 6
         ...
 
     Parameters
@@ -99,7 +99,7 @@ def _compute_run_start_time(internal_run_index: int, run_durations: list) -> flo
     float
         Cumulative start time in seconds.
     """
-    # Map internal index → actual 1-based run number
+    # Map internal index â†’ actual 1-based run number
     actual_run_num = internal_run_index + 1 if internal_run_index < 3 else internal_run_index + 2
 
     run_start_time = 0.0
@@ -149,16 +149,16 @@ def process_voxels(
     4.  Process each training run: compute valid indices, extract embeddings,
         compute absolute start time (accounting for skipped run 4).
     5.  Concatenate all training embeddings across runs.
-    6.  Fit PCA (768 → n_components) on training data; transform test data
-        using the SAME fitted PCA — no data leakage.
+    6.  Fit PCA (768 â†’ n_components) on training data; transform test data
+        using the SAME fitted PCA â€” no data leakage.
     7.  Apply HRF convolution (SPM + derivative + dispersion) to the
         PCA-reduced features for every training run and the test run.
     8.  Build variance map; exclude voxels below the 1st percentile.
     9.  For every valid voxel:
           a. Extract and standardize the test time series.
           b. Extract and standardize each training run's time series.
-          c. Fit Ridge(alpha) on current-only features → brain score.
-          d. Fit Ridge(alpha) on current+future features → combined score.
+          c. Fit Ridge(alpha) on current-only features â†’ brain score.
+          d. Fit Ridge(alpha) on current+future features â†’ combined score.
           e. Compute prediction gain = combined_score - current_score.
     10. Return results array of shape (n_voxels, 6):
         columns: [x, y, z, current_score, combined_score, gain]
@@ -230,12 +230,12 @@ def process_voxels(
     )
 
     # ------------------------------------------------------------------
-    # 2. Convert boolean mask → TR index list
+    # 2. Convert boolean mask â†’ TR index list
     # ------------------------------------------------------------------
     test_valid_indices = np.where(test_valid_mask)[0]
 
     if len(test_valid_indices) == 0:
-        raise ValueError("No valid TRs found in test data — check embeddings and masks.")
+        raise ValueError("No valid TRs found in test data â€” check embeddings and masks.")
 
     gaps = np.diff(test_valid_indices)
     logger.debug(
@@ -266,7 +266,7 @@ def process_voxels(
         run_valid_indices = np.where(run_valid_mask)[0]
 
         if len(run_valid_indices) == 0:
-            logger.warning("No valid TRs in training run %d — skipping.", i + 1)
+            logger.warning("No valid TRs in training run %d â€” skipping.", i + 1)
             continue
 
         run_valid_current = run_current[run_valid_indices]
@@ -306,7 +306,7 @@ def process_voxels(
     )
 
     # ------------------------------------------------------------------
-    # 6. PCA — fit on training, transform test (no leakage)
+    # 6. PCA â€” fit on training, transform test (no leakage)
     # ------------------------------------------------------------------
     logger.info("Fitting PCA (n_components=%d) on training data...", n_components)
 
@@ -324,7 +324,7 @@ def process_voxels(
         np.sum(pca_future.explained_variance_ratio_) * 100
     )
 
-    # Transform test using the SAME fitted PCAs — critical to prevent leakage
+    # Transform test using the SAME fitted PCAs â€” critical to prevent leakage
     test_current_reduced = pca_current.transform(test_valid_current)
     test_future_reduced  = pca_future.transform(test_valid_future)
 
@@ -404,7 +404,7 @@ def process_voxels(
     )
 
     # ------------------------------------------------------------------
-    # 8. Variance filter — exclude near-zero-variance voxels
+    # 8. Variance filter â€” exclude near-zero-variance voxels
     # ------------------------------------------------------------------
     test_data      = test_img.get_fdata()
     variance_map   = np.var(test_data, axis=-1)
@@ -415,7 +415,7 @@ def process_voxels(
     logger.info("Valid voxels after variance filter: %d", total_voxels)
 
     # ------------------------------------------------------------------
-    # 9 & 10 & 11. Voxel loop — Ridge regression
+    # 9 & 10 & 11. Voxel loop â€” Ridge regression
     # ------------------------------------------------------------------
     run_info = [
         {'run_index': r['run_index'], 'valid_indices': r['indices']}

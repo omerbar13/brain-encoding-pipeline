@@ -7,7 +7,7 @@ from nilearn.image import load_img
 logger = logging.getLogger(__name__)
 
 # Run 4 is never loaded but its duration still counts toward cumulative time.
-# Volume count is hard-coded as in the notebook (488 volumes × 2s TR = 976s).
+# Volume count is hard-coded as in the notebook (488 volumes Ã— 2s TR = 976s).
 _RUN4_VOLUMES  = 488
 _RUN4_DURATION = 976.0
 
@@ -20,7 +20,7 @@ def get_run_durations_with_logging(
     """
     Load each fMRI run and compute its duration in seconds.
 
-    Run 4 is never loaded from disk — its volume count is hard-coded
+    Run 4 is never loaded from disk â€” its volume count is hard-coded
     (488 volumes, 976 s) matching the notebook. All other runs are loaded
     and their duration is derived from shape[-1] * tr_duration.
 
@@ -73,7 +73,7 @@ def get_run_durations_with_logging(
 
                 logger.info(
                     "Run %d | shape=%s | volumes=%d | duration=%.1fs | "
-                    "time range: %.1fs → %.1fs",
+                    "time range: %.1fs â†’ %.1fs",
                     run_num, run_img.shape, n_timepoints, duration,
                     cumulative_time, cumulative_time + duration,
                 )

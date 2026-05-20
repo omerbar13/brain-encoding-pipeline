@@ -64,7 +64,7 @@ def process_annotations(tsv_path: str) -> tuple[dict, pd.DataFrame, pd.DataFrame
         speech_df = speech_df[speech_df['text'].notna()]
         speech_df = speech_df[speech_df['pos'] != 'SENTENCE']
 
-        # The third column (index 2) holds speaker tags — remove NARRATOR lines
+        # The third column (index 2) holds speaker tags â€” remove NARRATOR lines
         speech_df = speech_df[
             ~speech_df[speech_df.columns[2]].str.contains('NARRATOR', na=False)
         ]

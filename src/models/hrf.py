@@ -24,7 +24,7 @@ def create_modulated_events(
     continuous neural signals are encoded into the GLM framework.
 
     For example, with n_components=20 and 150 valid TRs, this produces
-    20 × 150 = 3000 rows, one per (component, TR) combination.
+    20 Ã— 150 = 3000 rows, one per (component, TR) combination.
 
     Parameters
     ----------
@@ -35,12 +35,12 @@ def create_modulated_events(
         Used to compute onset times: onset = tr_idx * tr_duration.
     run_start_time : float
         Absolute start time of this run in seconds. NOT added to onset
-        times here — nilearn's FirstLevelModel expects onsets relative
+        times here â€” nilearn's FirstLevelModel expects onsets relative
         to the start of the run image being fitted, not absolute time.
     n_components : int
         Number of PCA components (must match pc_data.shape[1]).
     prefix : str
-        Prepended to the trial_type name, e.g. "current" → "currentpc0".
+        Prepended to the trial_type name, e.g. "current" â†’ "currentpc0".
         Use "current" for current-word components and "future" for
         future-context components so they can be separated after convolution.
     tr_duration : float
@@ -94,7 +94,7 @@ def apply_hrf_convolution(
     capturing the delayed haemodynamic response to the neural signal
     represented by that component.
 
-    Only the rows corresponding to valid_indices are returned — the rest
+    Only the rows corresponding to valid_indices are returned â€” the rest
     of the design matrix (TRs with no linguistic content) is discarded.
 
     Parameters
@@ -131,7 +131,7 @@ def apply_hrf_convolution(
             trial_type, np.mean(mods), np.std(mods), np.min(mods), np.max(mods)
         )
 
-    # Fit the GLM — this performs the HRF convolution
+    # Fit the GLM â€” this performs the HRF convolution
     first_level_model = FirstLevelModel(
         t_r=tr_duration,
         hrf_model='spm + derivative + dispersion',

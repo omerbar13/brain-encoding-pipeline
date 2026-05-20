@@ -26,20 +26,20 @@ def create_brain_map(
     - prediction_gains    : gain = combined - current      (column 5, diverging)
 
     Each map is rendered from 4 views: lateral left, medial left,
-    lateral right, medial right — saved as a single wide figure.
+    lateral right, medial right â€” saved as a single wide figure.
 
     Parameters
     ----------
     voxel_scores : np.ndarray, shape (n_voxels, 6)
         Output of process_voxels(). Columns: [x, y, z, current, combined, gain].
     data_img : Nifti1Image
-        Any run image in the same voxel space — used only for its affine
+        Any run image in the same voxel space â€” used only for its affine
         to construct the output NIfTI volume map.
     output_dir : str
         Directory where PNG files are saved.
     """
     if len(voxel_scores) == 0:
-        logger.error("No voxel scores available — skipping brain map creation.")
+        logger.error("No voxel scores available â€” skipping brain map creation.")
         return
 
     os.makedirs(output_dir, exist_ok=True)
@@ -48,7 +48,7 @@ def create_brain_map(
 
     metrics = {
         'correlation_scores': (3, 'Correlation Map'),
-        'r2_scores':          (4, 'R² Map'),
+        'r2_scores':          (4, 'RÂ² Map'),
         'prediction_gains':   (5, 'Prediction Gain Map'),
     }
 
@@ -82,7 +82,7 @@ def create_brain_map(
         else:
             vmin, vmax = (-1, 1) if metric_name in ('correlation_scores', 'prediction_gains') else (0, 1)
 
-        # --- Project volume → surface ---
+        # --- Project volume â†’ surface ---
         texture_left  = surface.vol_to_surf(map_img, fsaverage.pial_left,  interpolation='linear')
         texture_right = surface.vol_to_surf(map_img, fsaverage.pial_right, interpolation='linear')
 

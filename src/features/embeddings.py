@@ -17,7 +17,7 @@ def get_word_embeddings(
     Generate contextual word embeddings using GPT-2 hidden states.
 
     For each word, the last num_tokens hidden state of the final layer
-    is used as the embedding — this captures the word in context of the
+    is used as the embedding â€” this captures the word in context of the
     preceding context_length words.
 
     Tokenisation matches the notebook exactly: each word is prefixed with
@@ -55,8 +55,8 @@ def get_word_embeddings(
         try:
             start_idx = max(0, i - context_length)
 
-            # Leading-space prefix on every word — matches GPT-2's BPE convention.
-            # e.g. "hello world" is tokenised as ["hello", "Ġworld"] not ["hello", "world"]
+            # Leading-space prefix on every word â€” matches GPT-2's BPE convention.
+            # e.g. "hello world" is tokenised as ["hello", "Ä world"] not ["hello", "world"]
             # This matches the notebook's: [' ' + w for w in context] + [' ' + word]
             context_words = [' ' + w for _, w in ordered_words[start_idx:i]]
             context_words.append(' ' + word)
@@ -66,7 +66,7 @@ def get_word_embeddings(
 
             with torch.no_grad():
                 outputs   = model(tokens, output_hidden_states=True)
-                # [:, -1, :] — last token position = current word in context
+                # [:, -1, :] â€” last token position = current word in context
                 embedding = outputs.hidden_states[-1][:, -1, :].squeeze().numpy()
 
             word_embeddings[onset] = embedding

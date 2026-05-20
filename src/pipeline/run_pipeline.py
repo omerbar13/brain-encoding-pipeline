@@ -129,7 +129,7 @@ def run_pipeline():
     test_mask        = all_run_masks[-1]
 
     # ------------------------------------------------------------------
-    # 8. Outer loop: ROI × window size
+    # 8. Outer loop: ROI Ã— window size
     # ------------------------------------------------------------------
     all_results = {}
 
